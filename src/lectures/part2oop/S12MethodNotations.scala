@@ -16,6 +16,7 @@ object S12MethodNotations extends App {
     def learns(item: String): String = s"$name learns $item"
     def learnsScala: String = learns("Scala")
   }
+
   val mary = new Person("Mary", "Inception")
   println(mary.likes("Inception"))
   println(mary likes "Inception")  // INFIX - Operator (likes) is between Operands (mary inception)

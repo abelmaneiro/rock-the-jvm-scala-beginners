@@ -15,12 +15,12 @@ abstract class MyList[+A] {
 
 }
 
-object Empty extends MyList[Nothing] {
+case object Empty extends MyList[Nothing] {
   override def head: Nothing = throw new NoSuchElementException("head of empty list")
   override def tail: MyList[Nothing] = throw new UnsupportedOperationException("tail of empty list")
   override def isEmpty: Boolean = true
 //  override def add[A](element: A): MyList[A] = new Cons(element, Empty)
-   override def add[B >: Nothing](element: B): MyList[B] = new Cons(element, Empty)  // But everything is a supertype of Nothing???
+   override def add[B >: Nothing](element: B): MyList[B] = Cons(element, Empty)  // But everything is a supertype of Nothing???
   override def printElements: String = ""
 
   override def map[B](transformer: MyTransformer[Nothing, B]): MyList[B] = Empty
@@ -30,11 +30,11 @@ object Empty extends MyList[Nothing] {
   override def ++[B >: Nothing](list: MyList[B]): MyList[B] = list
 }
 
-class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
+case class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
   override def head: A = h
   override def tail: MyList[A] = t
   override def isEmpty: Boolean = false
-  override def add[B >: A](element: B): MyList [B]= new Cons(element, this)
+  override def add[B >: A](element: B): MyList [B]= Cons(element, this)
   override def printElements: String = {
     if (t.isEmpty) h.toString
     else h + " " + t.printElements
@@ -61,7 +61,7 @@ class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
     = [2,3,6,Empty]
    */
   override def map[B](transformer: MyTransformer[A, B]): MyList[B] = {
-    new Cons(transformer.transform(h), t.map(transformer))
+    Cons(transformer.transform(h), t.map(transformer))
   }
   /*
     [1,2,Empty] ++ [3,4,5,Empty]
@@ -70,7 +70,7 @@ class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
     = new Cons(1, new Cons(2), [3,4,5,Empty]))  - Note Empty ++ [3,4,5,Empty] returns [3,4,5,Empty]
     = [1,2,3,4,5,Empty]
   */
-  override def ++[B >: A](list: MyList[B]): MyList[B] = new Cons(h, t ++ list)
+  override def ++[B >: A](list: MyList[B]): MyList[B] = Cons(h, t ++ list)
 
   /*
     [1,2,Empty].flatmap(n => [n, n+1])
@@ -97,14 +97,16 @@ object ListTest extends App {
   println(listOfIntEmpty.toString)
   println(Empty.toString)
   println()
-  val listOfInt = new Cons(1, new Cons(2, new Cons(3, Empty)))
-  val anotherListOfInt = new Cons(4, new Cons(5, Empty))
+  val listOfInt = Cons(1, Cons(2, Cons(3, Empty)))
+  val cloneListOfInt = Cons(1, Cons(2, Cons(3, Empty)))
+  val anotherListOfInt = Cons(4, Cons(5, Empty))
+
   println(listOfInt.head)
   println(listOfInt.tail.head)
   println(listOfInt.add(4).head)
   println(listOfInt.toString)
   println()
-  val listOfString = new Cons("hello", new Cons("Scala", Empty))
+  val listOfString = Cons("hello", Cons("Scala", Empty))
   println(listOfString.toString)
 
   //noinspection ConvertExpressionToSAM
@@ -127,6 +129,8 @@ object ListTest extends App {
 
   //noinspection ConvertExpressionToSAM
   println(listOfInt.flatMap(new MyTransformer[Int, MyList[Int]] {
-    override def transform(elem: Int): MyList[Int] = new Cons(elem, new Cons(elem + 1, Empty))
+    override def transform(elem: Int): MyList[Int] = Cons(elem, Cons(elem + 1, Empty))
   }))
+
+  println(listOfInt == cloneListOfInt)
 }

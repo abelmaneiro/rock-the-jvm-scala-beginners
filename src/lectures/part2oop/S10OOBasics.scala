@@ -19,7 +19,6 @@ object S10OOBasics extends App {
   val counter = new Counter
   counter.increment.print()
   counter.increment(10).print()
-
 }
 
 class Person(name: String, val age: Int = 0) {
