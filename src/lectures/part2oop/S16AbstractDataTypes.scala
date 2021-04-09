@@ -1,6 +1,6 @@
 package lectures.part2oop
 
-object s16AbstractDataTypes extends App{
+object S16AbstractDataTypes extends App{
 
   abstract class Animal {  // abstract class contain undefined fields methods
     val createType: String = "wild"

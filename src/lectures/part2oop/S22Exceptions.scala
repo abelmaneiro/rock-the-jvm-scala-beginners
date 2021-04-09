@@ -1,6 +1,6 @@
 package lectures.part2oop
 
-object s22Exceptions extends App {
+object S22Exceptions extends App {
 
   // 1. Raise Exceptions
   val x: String = null

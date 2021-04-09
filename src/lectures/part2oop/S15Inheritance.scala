@@ -1,6 +1,6 @@
 package lectures.part2oop
 
-object s15Inheritance extends App {
+object S15Inheritance extends App {
 
   // Visibility
   class Animal {  // Superclass of Cat
