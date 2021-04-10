@@ -139,6 +139,9 @@ object ListTest extends App {
   println(listOfInt.flatMap(new Function1[Int, MyList[Int]] {
     override def apply(elem: Int): MyList[Int] = Cons(elem, Cons(elem + 1, Empty))
   }))
+  println(listOfInt.flatMap((elem: Int) => Cons(elem, Cons(elem + 1, Empty))))
+  println(listOfInt.flatMap(elem => Cons(elem, Cons(elem + 1, Empty))))
+
 
   println(listOfInt == cloneListOfInt)
 }
