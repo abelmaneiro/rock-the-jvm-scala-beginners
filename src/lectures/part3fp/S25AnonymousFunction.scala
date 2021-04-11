@@ -50,13 +50,8 @@ object AnonymousFunction extends App {
   val supperAdd2: Int => Int => Int = x => y => x + y
   val supperAdd3: Int => Int => Int = x => x + _
   val supperAdd4 = (x: Int) => (y: Int) => x + y
-
-
   println(supperAdd1(10)(1))
   println(supperAdd2(20)(1))
   println(supperAdd3(30)(1))
   println(supperAdd4(40)(1))
-
-
-
 }

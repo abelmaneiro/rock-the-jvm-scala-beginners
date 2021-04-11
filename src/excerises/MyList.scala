@@ -13,12 +13,13 @@ abstract class MyList[+A] {
   def add[B >: A](element: B): MyList[B]
   protected[excerises] def printElements: String  // polymorphic call
   override def toString: String = s"[$printElements]"
+
+  // higher-order functions. Either received function as parameters or return other functions as the result
   def map[B](transformer: A => B): MyList[B]
   def flatMap[B](transformer: A => MyList[B]): MyList[B]
   def filter(predicate: A => Boolean): MyList[A]
 
   def ++[B >: A](list: MyList[B]): MyList[B]
-
 }
 
 case object Empty extends MyList[Nothing] {
@@ -29,7 +30,6 @@ case object Empty extends MyList[Nothing] {
    override def add[B >: Nothing](element: B): MyList[B] = Cons(element, Empty)  // But everything is a supertype of Nothing???
   override def printElements: String = ""
 
-  // higher-order functions. Either received function as parameters or return other functions as the result
   override def map[B](transformer: Nothing => B): MyList[B] = Empty
   override def flatMap[B](transformer: Nothing =>MyList[B]): MyList[B]  = Empty
   override def filter(predicate: Nothing => Boolean): MyList[Nothing] = Empty

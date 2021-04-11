@@ -1,9 +1,9 @@
 package lectures.part3fp
 
-object WhatsAFunction extends App {
+object S24WhatsAFunction extends App {
   // DREAM: use functions as first class elements
 
-  //Java & JVM designed around OOP, so best which can be done, is to simulate FP
+  //Java & JVM designed around OOP (where instances of classes are king), so best which can be done, is to simulate FP
   trait MyActon[A, B] {
     def execute(element: A): B
   }
@@ -52,8 +52,8 @@ object WhatsAFunction extends App {
   val concatenateStrings: Function2[String, String, String] = new Function2[String, String, String]  {
     override def apply(v1: String, v2: String): String = v1 + v2
   }
-  println(concatenateStrings("hello ", "World"))
   val concatenateStringsPlus: (String, String) => String = (v1: String, v2: String) => v1 + v2
+  println(concatenateStrings("hello ", "World"))
   println(concatenateStringsPlus("hello ", "Scala"))
 
 
@@ -62,12 +62,11 @@ object WhatsAFunction extends App {
       override def apply(b: Int): Int = a + b
     }
   }
+  val funcFuncAddPlus: Int => Int => Int = (a: Int) => (b: Int) => a + b
   println(funcFuncAdd(93)(2))  // curried function
+  println(funcFuncAddPlus(83)(2))  // curried function
   val add3 = funcFuncAdd(3)
   println(add3(5))
-
-  val funcFuncAddPlus: Int => Int => Int = (a: Int) => (b: Int) => a + b
-  println(funcFuncAdd(83)(2))  // curried function
 
 }
 
