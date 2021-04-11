@@ -8,10 +8,10 @@ object S26HOFsCurries extends App {
    }
   val res1 = superFunction(2, (aString, f) => if (f(aString.length)) 3 else 45)
 
-  val superFunction2: (Int, (String, (Int => Boolean)) => Int) => (Int => Int) = {
+  val superFunction2: (Int, (String, Int => Boolean) => Int) => Int => Int = {
     (x: Int, y: (String, Int => Boolean) => Int) => (z: Int) => x + y("hello", (x: Int) => x % 2 == 0) + z
   }
-  val superFunction3: (Int, (String, (Int => Boolean)) => Int) => (Int => Int) = {
+  val superFunction3: (Int, (String, Int => Boolean) => Int) => Int => Int = {
     new Function2[Int, Function2[String, Function1[Int, Boolean], Int], Function1[Int, Int]] {
       override def apply(x: Int, y: Function2[String, Function1[Int, Boolean], Int]): Int => Int = new Function1[Int, Int] {
         override def apply(z: Int): Int = x + y("hello", (x: Int) => x % 2 == 0) + z
@@ -65,5 +65,33 @@ object S26HOFsCurries extends App {
   val preciseFormat = curriedFormatter("%10.8f") _ // or include the CurriedFormatter _
   println(standardFormat(12345.6789123456789))
   println(preciseFormat(12345.6789123456789))
-  // Note following
+
+  // 4.27 Exercises
+  def toCurry[A, B, C](f: (A, B) => C): A => B => C = {
+    x => y => f(x, y)
+  }
+  val supperAdder2: Int => Int => Int = toCurry(_ + _)
+  val add4: Int => Int = supperAdder2(4)
+  println(add4(17))
+
+  def fromCurry[A, B, C](f: A => B => C): (A, B) => C = {
+    (x, y) => f(x)(y)
+  }
+  val simpleAdder: (Int, Int) => Int = fromCurry(x => y => x + y)
+  println(simpleAdder(4, 17))
+
+  def compose[A, B, C](f: A => B, g: C => A): C => B = {
+    x => f(g(x))
+  }
+  def andThen[A, B, C](f: A => B, g: B => C): A => C = {
+    x => g(f(x))
+  }
+  val add2: Int => Int = (x: Int) => x + 2
+  val times3: Int => Int = (x: Int) => x * 3
+
+  val composed = compose(add2, times3)
+  val ordered = andThen(add2, times3)
+  println(composed(4))  // (4 * 3) + 2 = 14
+  println(ordered(4))  // (4 + 2) * 3 = 18
+
 }
