@@ -17,9 +17,12 @@ abstract class MyList[+A] {
   override def toString: String = s"[$printElements]"
 
   // higher-order functions. Either received function as parameters or return other functions as the result
+  // Needed for For comprehension
   def map[B](transformer: A => B): MyList[B]
   def flatMap[B](transformer: A => MyList[B]): MyList[B]
   def filter(predicate: A => Boolean): MyList[A]
+  def withFilter(predicate: A => Boolean): MyList[A]
+
 
   def ++[B >: A](list: MyList[B]): MyList[B]
 
@@ -44,6 +47,8 @@ case object Empty extends MyList[Nothing] {
   override def map[B](transformer: Nothing => B): MyList[B] = Empty
   override def flatMap[B](transformer: Nothing =>MyList[B]): MyList[B]  = Empty
   override def filter(predicate: Nothing => Boolean): MyList[Nothing] = Empty
+  override def withFilter(predicate: Nothing => Boolean): MyList[Nothing] = Empty
+
 
   override def ++[B >: Nothing](list: MyList[B]): MyList[B] = list
 
@@ -75,6 +80,10 @@ case class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
    */
 
   override def filter(predicate: A => Boolean): MyList[A] = {
+    if (predicate(h)) new Cons[A](h, t.filter(predicate))  // or predicate.apply(h)) ....
+    else t.filter(predicate)
+  }
+  override def withFilter(predicate: A => Boolean): MyList[A] = {
     if (predicate(h)) new Cons[A](h, t.filter(predicate))  // or predicate.apply(h)) ....
     else t.filter(predicate)
   }
@@ -212,5 +221,12 @@ object ListTest extends App {
   println(listOfInt.sortTailRec1((x, y) => y - x))
   println(anotherListOfInt.zipWith[String, String](listOfString, _ + "-" + _))
   println(listOfInt.fold("*")(_ + _))
+
+  for (n <- listOfInt) println("n " + n)
+  println(for {
+    n <- listOfInt if n % 2 != 0
+    s <- listOfString
+  } yield n + "-" + s)
+
 
 }
