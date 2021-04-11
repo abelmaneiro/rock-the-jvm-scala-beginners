@@ -3,16 +3,25 @@ package lectures.part3fp
 import scala.annotation.tailrec
 
 object S26HOFsCurries extends App {
-  //  val superFunction: (Int, (String, Int => Boolean) => Int) => Int => Int = ???
+   val superFunction: (Int, (String, Int => Boolean) => Int) => Int => Int = {
+     (n,f) => x => x
+   }
+  val res1 = superFunction(2, (aString, f) => if (f(aString.length)) 3 else 45)
+
+  val superFunction2: (Int, (String, (Int => Boolean)) => Int) => (Int => Int) = {
+    (x: Int, y: (String, Int => Boolean) => Int) => (z: Int) => x + y("hello", (x: Int) => x % 2 == 0) + z
+  }
+  val superFunction3: (Int, (String, (Int => Boolean)) => Int) => (Int => Int) = {
+    new Function2[Int, Function2[String, Function1[Int, Boolean], Int], Function1[Int, Int]] {
+      override def apply(x: Int, y: Function2[String, Function1[Int, Boolean], Int]): Int => Int = new Function1[Int, Int] {
+        override def apply(z: Int): Int = x + y("hello", (x: Int) => x % 2 == 0) + z
+      }
+    }
+  }
 
   // function that applies a function n tiles over a value x
   // nTimes(f, n, x)
   // nTimes(f, 3, x) = nTimes(f, 2, f(x) = nTimes(f, 1, f(f(x)) = nTimes(f, 0, f(f(f(x)))  == f(f(f(x)))
-  val nTimesT = (f: Int => Int, n: Int, x: Int) => {
-    if (x <= 1) f(x)
-    else nTimes(f, n - 1, x)
-  }
-
   @tailrec
   def nTimes(f: Int => Int, n: Int, x: Int): Int = {
     if (n <= 0) x
