@@ -34,8 +34,6 @@ abstract class CreateEntry(name: String) extends Command {
               currentDirectory = /a
               path = ["b'}
          */
-        println(path)
-        println(currentDirectory.findEntry(path.head))
         val oldEntry = currentDirectory.findEntry(path.head).asDirectory
         currentDirectory.replaceEntry(oldEntry.name, updateStructure(oldEntry, path.tail, newEntry))
       }
