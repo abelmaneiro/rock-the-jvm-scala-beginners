@@ -1,5 +1,7 @@
 package pactical.files
 
+import pactical.filesystem.FileSystemException
+
 import scala.annotation.tailrec
 
 class Directory(override val parentPath: String, override val name: String, val contents: List[DirEntry])
@@ -34,6 +36,7 @@ class Directory(override val parentPath: String, override val name: String, val 
     new Directory(parentPath, name, contents.filter(e => !e.name.equals(entryName)) :+ newEntry)
 
   override def asDirectory: Directory = this
+  override def asFile: File = throw new FileSystemException("A Directory can not be converted to a File")
 
   override def getType: String = "Directory"
 }
