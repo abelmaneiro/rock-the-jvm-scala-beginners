@@ -2,7 +2,7 @@ package pactical.files
 
 import pactical.filesystem.FileSystemException
 
-class File(override val parentPath: String, override val name: String, contents: String)
+class File(override val parentPath: String, override val name: String, val contents: String)
   extends DirEntry(parentPath, name) {
 
   override def asDirectory: Directory = throw new FileSystemException("A File can not be converted to a Directory")
